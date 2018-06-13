@@ -18,7 +18,7 @@ namespace ZuulCS
 
 		private void createRooms()
 		{
-			Room outside, theatre, pub, lab, office;
+			Room outside, theatre, pub, lab, office,basement,upstairs;
 
 			// create the rooms
 			outside = new Room("outside the main entrance of the university");
@@ -26,20 +26,28 @@ namespace ZuulCS
 			pub = new Room("in the campus pub");
 			lab = new Room("in a computing lab");
 			office = new Room("in the computing admin office");
-
+            basement = new Room("in the basement");
+            upstairs = new Room("upstairs");
 			// initialise room exits
 			outside.setExit("east", theatre);
 			outside.setExit("south", lab);
 			outside.setExit("west", pub);
 
 			theatre.setExit("west", outside);
-
+            theatre.setExit("up", upstairs);
+            theatre.setExit("down", basement);
+            
 			pub.setExit("east", outside);
 
 			lab.setExit("north", outside);
 			lab.setExit("east", office);
+            lab.setExit("down", basement);
+            lab.setExit("up", upstairs);
 
 			office.setExit("west", lab);
+
+            basement.setExit("up", lab);
+            upstairs.setExit("down", lab);
 
 			player.CurrentRoom = outside;  // start game outside
 		}
@@ -56,11 +64,22 @@ namespace ZuulCS
 			// execute them until the game is over.
 			bool finished = false;
 			while (! finished) {
-				Command command = parser.getCommand();
-				finished = processCommand(command);
-			}
+				
+                if (player.isAlive() == true)
+                {
+                    Command command = parser.getCommand();
+                    finished = processCommand(command);
+
+                }
+                else {
+                    finished = true;
+                }
+               
+            }
 			Console.WriteLine("Thank you for playing.");
-		}
+            Console.WriteLine("press enter to quit");
+            Console.Read();
+        }
 
 		/**
 	     * Print out the opening message for the player.
@@ -89,25 +108,38 @@ namespace ZuulCS
 				return false;
 			}
 
-			string commandWord = command.getCommandWord();
-			switch (commandWord) {
-				case "help":
-					printHelp();
-					break;
-				case "go":
-					goRoom(command);
-					break;
-				case "quit":
-					wantToQuit = true;
-					break;
-                case "look":
-                    Console.WriteLine(player.CurrentRoom.getLongDescription());
-                    break;
+            if (player.isAlive() == true)
+            {
 
+                string commandWord = command.getCommandWord();
+                switch (commandWord)
+                {
+                    case "help":
+                        printHelp();
+                        break;
+                    case "go":
+                        goRoom(command);
+                        
+                        break;
+                    case "quit":
+                        wantToQuit = true;
+                        break;
+                    case "look":
+                        Console.WriteLine(player.CurrentRoom.getLongDescription());
+                        break;
+
+                }
             }
-           
-			return wantToQuit;
-		}
+            else
+            {
+                Console.WriteLine("you are dead");
+                
+                wantToQuit = true;
+             }
+
+
+            return wantToQuit;
+        }
 
 		// implementations of user commands:
 
@@ -145,8 +177,10 @@ namespace ZuulCS
 			if (nextRoom == null) {
 				Console.WriteLine("There is no door to "+direction+"!");
 			} else {
-				player.CurrentRoom = nextRoom;
-				Console.WriteLine(player.CurrentRoom.getLongDescription());
+              
+                player.CurrentRoom = nextRoom;
+                player.damage(5);
+                Console.WriteLine(player.CurrentRoom.getLongDescription());
 			}
 		}
 

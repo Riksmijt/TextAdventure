@@ -10,11 +10,12 @@ namespace ZuulCS
 
         public Player()
         {
-            
+            health = 500;
         }
         public void damage(uint amountDamage)
         {
             health = health - (int) amountDamage;
+            Console.WriteLine("current health  " + health);
         }
         public void heal(int amountHeal) 
         {
@@ -25,8 +26,11 @@ namespace ZuulCS
         {
             if (health <= 0)
             {
+             
                 return false;
+                
             }
+
             return true;
         }
     }

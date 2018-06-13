@@ -9,4 +9,5 @@ C:\mapjes\schooljaar 2017-2018\project4\ConsoleApplication1\ConsoleApplication1\
 C:\mapjes\schooljaar 2017-2018\project4\ConsoleApplication1\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb
 C:\mapjes\schooljaar 2017-2018\project4\ConsoleApplication1\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
 C:\mapjes\schooljaar 2017-2018\project4\ConsoleApplication1\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
-C:\mapjes\schooljaar 2017-2018\project4\ConsoleApplication1\ConsoleApplication1\obj\Debug\ConsoleApplication1.csprojResolveAssemblyReference.cache
+C:\mapjes\schooljaar 2017-2018\project4\ConsoleApplication1\ConsoleApplication1\obj\Debug\ConsoleApplication1.csprojAssemblyReference.cache
+C:\mapjes\schooljaar 2017-2018\project4\ConsoleApplication1\ConsoleApplication1\obj\Debug\ConsoleApplication1.csproj.CoreCompileInputs.cache
