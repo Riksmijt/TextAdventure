@@ -7,10 +7,12 @@ namespace ZuulCS
 		private Parser parser;
 		//private Room currentRoom;
         private Player player;
+       // private Inventory inv;
+       
 
 		public Game ()
 		{
-			
+           // inv = new Inventory();
 			parser = new Parser();
             player = new Player();
             createRooms();
@@ -34,10 +36,11 @@ namespace ZuulCS
 			outside.setExit("west", pub);
 
 			theatre.setExit("west", outside);
-            theatre.setExit("up", upstairs);
-            theatre.setExit("down", basement);
+            theatre.Items.Add(new InventoryItem("apple", 1, "perhaps this could heal you",false,true));
+            theatre.Items.Add(new InventoryItem("sniper", 20, "one shot one kill", false,false));
             
 			pub.setExit("east", outside);
+            pub.Items.Add(new InventoryItem("acid", 2, "are you sure you can grab acid", true,false));
 
 			lab.setExit("north", outside);
 			lab.setExit("east", office);
@@ -91,8 +94,46 @@ namespace ZuulCS
 			Console.WriteLine("Zuul is a new, incredibly boring adventure game.");
 			Console.WriteLine("Type 'help' if you need help.");
 			Console.WriteLine();
+           
 			Console.WriteLine(player.CurrentRoom.getLongDescription());
+            
 		}
+        public InventoryItem GetFirstCurrentRoomItem(string name)
+        {
+           
+            foreach(InventoryItem item in player.CurrentRoom.Items)
+            {
+                if(item.name == name)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+       
+        public InventoryItem GetFirstPlayerItem(string name)
+        {
+            foreach (InventoryItem item in player.PlayerItems)
+            {
+                if (item.name == name)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+       public InventoryItem usable(string name)
+        {
+            foreach(InventoryItem item in player.PlayerItems)
+            {
+                if(item.name == name && item.healing == true)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+        
 
 		/**
 	     * Given a command, process (that is: execute) the command.
@@ -110,7 +151,7 @@ namespace ZuulCS
 
             if (player.isAlive() == true)
             {
-
+                //inv.lookAtItmes();
                 string commandWord = command.getCommandWord();
                 switch (commandWord)
                 {
@@ -127,7 +168,21 @@ namespace ZuulCS
                     case "look":
                         Console.WriteLine(player.CurrentRoom.getLongDescription());
                         break;
+                    case "take":
+                        Console.WriteLine(command.getSecondWord());
+                        player.take(GetFirstCurrentRoomItem(command.getSecondWord()));
+                        
+                        break;
+                    case "drop":
+                        player.drop(GetFirstPlayerItem(command.getSecondWord()));
+                        break;
+                    case "inventory":
 
+                        Console.WriteLine(player.showInv());
+                        break;
+                    case "use":
+                        player.use(usable(command.getSecondWord()));
+                        break;
                 }
             }
             else
@@ -180,6 +235,12 @@ namespace ZuulCS
               
                 player.CurrentRoom = nextRoom;
                 player.damage(5);
+                foreach(InventoryItem item in player.CurrentRoom.Items)
+                {
+                    Console.WriteLine(item.toString());
+                    
+                }
+
                 Console.WriteLine(player.CurrentRoom.getLongDescription());
 			}
 		}
