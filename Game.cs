@@ -41,8 +41,9 @@ namespace ZuulCS
             theatre.Items.Add(new Apple());
             theatre.Items.Add(new Apple());
             theatre.lockIt(false);
-            
-			pub.setExit("east", outside);
+
+            pub.lockIt(true);
+            pub.setExit("east", outside);
             pub.Items.Add(new Apple());
 
 			lab.setExit("north", outside);
@@ -57,7 +58,7 @@ namespace ZuulCS
             basement.Items.Add(new Key());
             basement.setExit("up", lab);
             upstairs.setExit("down", lab);
-            upstairs.lockIt(true);
+           
 			player.CurrentRoom = outside;  // start game outside
 		}
 
@@ -217,35 +218,43 @@ namespace ZuulCS
 			parser.showCommands();
 		}
 
-		/**
+        /**
 	     * Try to go to one direction. If there is an exit, enter the new
 	     * room, otherwise print an error message.
 	     */
-		private void goRoom(Command command)
-		{
-			if(!command.hasSecondWord()) {
-				// if there is no second word, we don't know where to go...
-				Console.WriteLine("Go where?");
-				return;
-			}
+        private void goRoom(Command command)
+        {
+            if (!command.hasSecondWord())
+            {
+                // if there is no second word, we don't know where to go...
+                Console.WriteLine("Go where?");
+                return;
+            }
 
-			string direction = command.getSecondWord();
+            string direction = command.getSecondWord();
 
-			// Try to leave current room.
-			Room nextRoom = player.CurrentRoom.getExit(direction);
+            // Try to leave current room.
+            Room nextRoom = player.CurrentRoom.getExit(direction);
+            if (nextRoom == null)
+            {
+                Console.WriteLine("There is no door to " + direction + "!");
+            }
+            else if (nextRoom.Locked)
+            {
+                Console.WriteLine("this room is locked");
+            }                
+            else
+            {
 
-			if (nextRoom == null) {
-				Console.WriteLine("There is no door to "+direction+"!");
-			} else {
-              
                 player.CurrentRoom = nextRoom;
                 player.damage(5);
                 player.CurrentRoom.showItems();
 
                 Console.WriteLine(player.CurrentRoom.getLongDescription());
-			}
-		}
-
+            }
+            
+        }
+           
         public void useItem(Command command)
         {
 

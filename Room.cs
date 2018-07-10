@@ -14,8 +14,8 @@ namespace ZuulCS
 		private Dictionary<string, Room> exits; // stores exits of this room.
 
         internal bool Locked { get => locked; }
+        internal Dictionary<string, Room> Exits { get => exits; }
 
-        
         /**
 	     * Create a room described "description". Initially, it has no exits.
 	     * "description" is something like "in a kitchen" or "in an open court
@@ -32,6 +32,7 @@ namespace ZuulCS
             
             
 		}
+        
         public void showItems()
         {
             foreach (Item item in Items)
@@ -42,7 +43,7 @@ namespace ZuulCS
         }
         public void lockIt(bool isLocked)
         {
-            isLocked = Locked;
+            locked = isLocked;
         }
 
 		/**
@@ -95,12 +96,16 @@ namespace ZuulCS
 			}
 			return returnstring;
 		}
+        public void unlock()
+        {
+            locked = false;
+        }
 
-		/**
+        /**
 	     * Return the room that is reached if we go from this room in direction
 	     * "direction". If there is no room in that direction, return null.
 	     */
-		public Room getExit(string direction)
+        public Room getExit(string direction)
 		{
 			if (exits.ContainsKey(direction)) {
 				return (Room)exits[direction];

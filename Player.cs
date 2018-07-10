@@ -24,6 +24,7 @@ namespace ZuulCS
             pars = new Parser();
             playerInventory = new Inventory();
             
+            
             health = 50;
             
         }
@@ -44,10 +45,19 @@ namespace ZuulCS
             if (currentRoom.Locked == true)
             {
                 Console.WriteLine("it needs to be unlocked");
+                foreach(string key in CurrentRoom.Exits.Keys)
+                {
+                    if (CurrentRoom.Exits[key].Locked)
+                    {
+                        CurrentRoom.Exits[key].unlock();
+                        
+                    }
+                }
             }
             else
             {
                 Console.WriteLine("this door is already unlocked");
+                Console.WriteLine(currentRoom.getLongDescription());
             }
 
         }

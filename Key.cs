@@ -18,7 +18,10 @@ namespace ZuulCS
         {
             if (o.GetType() == typeof(Player))
             {
+
                 Player r = (Player)o;
+
+
                 r.Unlock();
                 Console.WriteLine("door unlocked");
             }
