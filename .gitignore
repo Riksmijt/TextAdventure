@@ -1,0 +1,5 @@
+x86
+*bin*
+*obj*
+*properties*
+*.config*

@@ -35,10 +35,12 @@ namespace ZuulCS
 			outside.setExit("east", theatre);
 			outside.setExit("south", lab);
 			outside.setExit("west", pub);
+            outside.lockIt(false);
 
 			theatre.setExit("west", outside);
             theatre.Items.Add(new Apple());
             theatre.Items.Add(new Apple());
+            theatre.lockIt(false);
             
 			pub.setExit("east", outside);
             pub.Items.Add(new Apple());
@@ -47,13 +49,15 @@ namespace ZuulCS
 			lab.setExit("east", office);
             lab.setExit("down", basement);
             lab.setExit("up", upstairs);
+            lab.lockIt(false);
 
 			office.setExit("west", lab);
 
             upstairs.Items.Add(new AWP());
+            basement.Items.Add(new Key());
             basement.setExit("up", lab);
             upstairs.setExit("down", lab);
-
+            upstairs.lockIt(true);
 			player.CurrentRoom = outside;  // start game outside
 		}
 
@@ -181,6 +185,7 @@ namespace ZuulCS
                     case "use":
                         Item itemToUse = player.PlayerInventory.GetFirstPlayerItem(command.getSecondWord());
                         itemToUse.use(player);
+                       
                         player.PlayerInventory.Drop(itemToUse);
                         break;
                 }
@@ -198,7 +203,7 @@ namespace ZuulCS
 
 		// implementations of user commands:
 
-		/**
+		/**--
 	     * Print out some help information.
 	     * Here we print some stupid, cryptic message and a list of the
 	     * command words.
@@ -241,5 +246,15 @@ namespace ZuulCS
 			}
 		}
 
-	}
+        public void useItem(Command command)
+        {
+
+            // bepaal item command.getsecondword()
+           
+            //bepaal target command.getthirdword()
+           
+        }
+
+
+    }
 }

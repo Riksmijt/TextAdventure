@@ -10,7 +10,10 @@ namespace ZuulCS
         public List<Item> Items { get; set; } = new List<Item>(); 
 
         private string description;
+        public bool locked;
 		private Dictionary<string, Room> exits; // stores exits of this room.
+
+        internal bool Locked { get => locked; }
 
         
         /**
@@ -21,7 +24,8 @@ namespace ZuulCS
 
         public Room(string description)
 		{
-           
+
+            locked = false;
             this.description = description;
 			exits = new Dictionary<string, Room>();
            
@@ -35,6 +39,10 @@ namespace ZuulCS
                 Console.WriteLine(item.name);
 
             }
+        }
+        public void lockIt(bool isLocked)
+        {
+            isLocked = Locked;
         }
 
 		/**
