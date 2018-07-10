@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace ZuulCS
 {
@@ -6,7 +7,7 @@ namespace ZuulCS
 	public class Room
 	{
 
-        public List<InventoryItem> Items { get; set; } = new List<InventoryItem>(); 
+        public List<Item> Items { get; set; } = new List<Item>(); 
 
         private string description;
 		private Dictionary<string, Room> exits; // stores exits of this room.
@@ -27,7 +28,14 @@ namespace ZuulCS
             
             
 		}
+        public void showItems()
+        {
+            foreach (Item item in Items)
+            {
+                Console.WriteLine(item.name);
 
+            }
+        }
 
 		/**
 	     * Define an exit from this room.

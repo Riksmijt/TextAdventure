@@ -9,15 +9,18 @@ namespace ZuulCS
     {
        
         private Room currentRoom;
+        private Inventory playerInventory;
         private int health;
        
         
         public Room CurrentRoom { get{ return currentRoom; } set { currentRoom = value; } }
-        private List<InventoryItem> playerItems = new List<InventoryItem>();
-        public List<InventoryItem> PlayerItems { get { return playerItems; } set { playerItems = value; } }
+        // private List<InventoryItem> playerItems = new List<InventoryItem>();
+        //  public List<InventoryItem> PlayerItems { get { return playerItems; } set { playerItems = value; } }
+
+        public Inventory PlayerInventory { get { return playerInventory; } set { playerInventory = value; } }
         public Player()
         {
-
+            playerInventory = new Inventory();
             
             health = 50;
             
@@ -31,7 +34,7 @@ namespace ZuulCS
         {
             health = health + amountHeal;
         }
-        public void take(InventoryItem item)
+       /* public void take(InventoryItem item)
         {
             playerItems.Add(item);
             currentRoom.Items.Remove(item);
@@ -45,24 +48,9 @@ namespace ZuulCS
         {
             playerItems.Remove(item);
             currentRoom.Items.Add(item);
-        }
-        public void use(InventoryItem item)
-        {
-            if (item != null && item.healing == true)
-            {
-                this.heal(3);
-            }
-        }
-        public string showInv()
-        {
-            string output = "";
-            foreach(InventoryItem item in playerItems)
-            {
-                output += item.toString() + "\r\n";
-            }
-            return output;
-         
-        }
+        }*/
+      
+        
 
         public bool isAlive()
         {

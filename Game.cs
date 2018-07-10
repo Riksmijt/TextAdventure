@@ -7,20 +7,21 @@ namespace ZuulCS
 		private Parser parser;
 		//private Room currentRoom;
         private Player player;
-       // private Inventory inv;
-       
+        // private Inventory inv;
+      
 
 		public Game ()
 		{
            // inv = new Inventory();
 			parser = new Parser();
             player = new Player();
+           
             createRooms();
         }
 
 		private void createRooms()
 		{
-			Room outside, theatre, pub, lab, office,basement,upstairs;
+			Room outside, theatre, pub, lab, office, basement, upstairs;
 
 			// create the rooms
 			outside = new Room("outside the main entrance of the university");
@@ -36,11 +37,11 @@ namespace ZuulCS
 			outside.setExit("west", pub);
 
 			theatre.setExit("west", outside);
-            theatre.Items.Add(new InventoryItem("apple", 1, "perhaps this could heal you",false,true));
-            theatre.Items.Add(new InventoryItem("sniper", 20, "one shot one kill", false,false));
+            theatre.Items.Add(new Apple());
+            theatre.Items.Add(new Apple());
             
 			pub.setExit("east", outside);
-            pub.Items.Add(new InventoryItem("acid", 2, "are you sure you can grab acid", true,false));
+            pub.Items.Add(new Apple());
 
 			lab.setExit("north", outside);
 			lab.setExit("east", office);
@@ -49,6 +50,7 @@ namespace ZuulCS
 
 			office.setExit("west", lab);
 
+            upstairs.Items.Add(new AWP());
             basement.setExit("up", lab);
             upstairs.setExit("down", lab);
 
@@ -98,10 +100,10 @@ namespace ZuulCS
 			Console.WriteLine(player.CurrentRoom.getLongDescription());
             
 		}
-        public InventoryItem GetFirstCurrentRoomItem(string name)
+        public Item GetFirstCurrentRoomItem(string name)
         {
            
-            foreach(InventoryItem item in player.CurrentRoom.Items)
+            foreach(Item item in player.CurrentRoom.Items)
             {
                 if(item.name == name)
                 {
@@ -111,18 +113,8 @@ namespace ZuulCS
             return null;
         }
        
-        public InventoryItem GetFirstPlayerItem(string name)
-        {
-            foreach (InventoryItem item in player.PlayerItems)
-            {
-                if (item.name == name)
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-       public InventoryItem usable(string name)
+       
+      /* public InventoryItem usable(string name)
         {
             foreach(InventoryItem item in player.PlayerItems)
             {
@@ -132,7 +124,7 @@ namespace ZuulCS
                 }
             }
             return null;
-        }
+        }*/
         
 
 		/**
@@ -167,21 +159,29 @@ namespace ZuulCS
                         break;
                     case "look":
                         Console.WriteLine(player.CurrentRoom.getLongDescription());
+                        player.CurrentRoom.showItems();
                         break;
                     case "take":
                         Console.WriteLine(command.getSecondWord());
-                        player.take(GetFirstCurrentRoomItem(command.getSecondWord()));
-                        
+                        Item toTake = GetFirstCurrentRoomItem(command.getSecondWord());
+                        player.PlayerInventory.Take(toTake);
+                        player.CurrentRoom.Items.Remove(toTake);
                         break;
                     case "drop":
-                        player.drop(GetFirstPlayerItem(command.getSecondWord()));
+                        Item toDrop = player.PlayerInventory.GetFirstPlayerItem(command.getSecondWord());
+                        player.PlayerInventory.Drop(toDrop);
+                        player.CurrentRoom.Items.Add(toDrop);
                         break;
                     case "inventory":
-
-                        Console.WriteLine(player.showInv());
+                        foreach (Item item in player.PlayerInventory.Items)
+                        {
+                            Console.WriteLine(item.name);
+                        }
                         break;
                     case "use":
-                        player.use(usable(command.getSecondWord()));
+                        Item itemToUse = player.PlayerInventory.GetFirstPlayerItem(command.getSecondWord());
+                        itemToUse.use(player);
+                        player.PlayerInventory.Drop(itemToUse);
                         break;
                 }
             }
@@ -235,11 +235,7 @@ namespace ZuulCS
               
                 player.CurrentRoom = nextRoom;
                 player.damage(5);
-                foreach(InventoryItem item in player.CurrentRoom.Items)
-                {
-                    Console.WriteLine(item.toString());
-                    
-                }
+                player.CurrentRoom.showItems();
 
                 Console.WriteLine(player.CurrentRoom.getLongDescription());
 			}
