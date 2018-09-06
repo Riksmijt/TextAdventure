@@ -7,44 +7,33 @@ namespace ZuulCS
 	public class Room
 	{
 
-        public List<Item> Items { get; set; } = new List<Item>(); 
-
+        
         private string description;
         public bool locked;
+        private Inventory roominventory;
 		private Dictionary<string, Room> exits; // stores exits of this room.
 
-        internal bool Locked { get => locked; }
+        
         internal Dictionary<string, Room> Exits { get => exits; }
-
+        internal Inventory RoomInventory { get => roominventory; }
         /**
 	     * Create a room described "description". Initially, it has no exits.
 	     * "description" is something like "in a kitchen" or "in an open court
 	     * yard".
 	     */
 
-        public Room(string description)
+        public Room(string description,bool shouldBeLocked)
 		{
 
-            locked = false;
+            locked = shouldBeLocked;
             this.description = description;
 			exits = new Dictionary<string, Room>();
-           
-            
-            
-		}
-        
-        public void showItems()
-        {
-            foreach (Item item in Items)
-            {
-                Console.WriteLine(item.name);
+            roominventory = new Inventory();
 
-            }
+
         }
-        public void lockIt(bool isLocked)
-        {
-            locked = isLocked;
-        }
+
+      
 
 		/**
 	     * Define an exit from this room.
@@ -98,7 +87,16 @@ namespace ZuulCS
 		}
         public void unlock()
         {
-            locked = false;
+            if (this.locked)
+            {
+                this.locked = false;
+                Console.WriteLine("Wow you unlocked a door. Good job");
+            }
+            else
+            {
+                this.locked = true;
+                Console.WriteLine("Oof it's closed");
+            }
         }
 
         /**

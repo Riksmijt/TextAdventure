@@ -7,7 +7,7 @@ namespace ZuulCS
 {
     class Player
     {
-       
+        
         private Room currentRoom;
         private Inventory playerInventory;
         private Parser pars;
@@ -21,6 +21,7 @@ namespace ZuulCS
         public Inventory PlayerInventory { get { return playerInventory; } set { playerInventory = value; } }
         public Player()
         {
+
             pars = new Parser();
             playerInventory = new Inventory();
             
@@ -28,6 +29,7 @@ namespace ZuulCS
             health = 50;
             
         }
+     
         public void damage(uint amountDamage)
         {
             health = health - (int) amountDamage;
@@ -37,30 +39,7 @@ namespace ZuulCS
         {
             health = health + amountHeal;
         }
-        public void Unlock()
-        {
-            Command commnd = pars.getCommand();
-            string whatToUnlock = commnd.getSecondWord();
 
-            if (currentRoom.Locked == true)
-            {
-                Console.WriteLine("it needs to be unlocked");
-                foreach(string key in CurrentRoom.Exits.Keys)
-                {
-                    if (CurrentRoom.Exits[key].Locked)
-                    {
-                        CurrentRoom.Exits[key].unlock();
-                        
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("this door is already unlocked");
-                Console.WriteLine(currentRoom.getLongDescription());
-            }
-
-        }
        /* public void take(InventoryItem item)
         {
             playerItems.Add(item);

@@ -21,6 +21,7 @@ namespace ZuulCS
                 "drop",
                 "inventory",
                 "use"
+                
 			};
 		}
 

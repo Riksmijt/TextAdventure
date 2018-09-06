@@ -24,38 +24,38 @@ namespace ZuulCS
 			Room outside, theatre, pub, lab, office, basement, upstairs;
 
 			// create the rooms
-			outside = new Room("outside the main entrance of the university");
-			theatre = new Room("in a lecture theatre");
-			pub = new Room("in the campus pub");
-			lab = new Room("in a computing lab");
-			office = new Room("in the computing admin office");
-            basement = new Room("in the basement");
-            upstairs = new Room("upstairs");
+			outside = new Room("outside the main entrance of the university",false);
+			theatre = new Room("in a lecture theatre",false);
+			pub = new Room("in the campus pub",true);
+			lab = new Room("in a computing lab",false);
+			office = new Room("in the computing admin office",false);
+            basement = new Room("in the basement",false);
+            upstairs = new Room("upstairs",false);
 			// initialise room exits
 			outside.setExit("east", theatre);
 			outside.setExit("south", lab);
 			outside.setExit("west", pub);
-            outside.lockIt(false);
+            
 
 			theatre.setExit("west", outside);
-            theatre.Items.Add(new Apple());
-            theatre.Items.Add(new Apple());
-            theatre.lockIt(false);
+            theatre.RoomInventory.addItem(new Apple());
+            theatre.RoomInventory.addItem(new Apple());
+            
 
-            pub.lockIt(true);
+            
             pub.setExit("east", outside);
-            pub.Items.Add(new Apple());
+            pub.RoomInventory.addItem(new Apple());
 
 			lab.setExit("north", outside);
 			lab.setExit("east", office);
             lab.setExit("down", basement);
             lab.setExit("up", upstairs);
-            lab.lockIt(false);
+            
 
 			office.setExit("west", lab);
 
-            upstairs.Items.Add(new AWP());
-            basement.Items.Add(new Key());
+            upstairs.RoomInventory.addItem(new AWP());
+            basement.RoomInventory.addItem(new Key());
             basement.setExit("up", lab);
             upstairs.setExit("down", lab);
            
@@ -105,18 +105,7 @@ namespace ZuulCS
 			Console.WriteLine(player.CurrentRoom.getLongDescription());
             
 		}
-        public Item GetFirstCurrentRoomItem(string name)
-        {
-           
-            foreach(Item item in player.CurrentRoom.Items)
-            {
-                if(item.name == name)
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
+
        
        
       /* public InventoryItem usable(string name)
@@ -164,18 +153,13 @@ namespace ZuulCS
                         break;
                     case "look":
                         Console.WriteLine(player.CurrentRoom.getLongDescription());
-                        player.CurrentRoom.showItems();
+                        player.CurrentRoom.RoomInventory.GetItemsRoom();
                         break;
                     case "take":
-                        Console.WriteLine(command.getSecondWord());
-                        Item toTake = GetFirstCurrentRoomItem(command.getSecondWord());
-                        player.PlayerInventory.Take(toTake);
-                        player.CurrentRoom.Items.Remove(toTake);
+                        player.CurrentRoom.RoomInventory.Take(player.PlayerInventory, command.getSecondWord());
                         break;
                     case "drop":
-                        Item toDrop = player.PlayerInventory.GetFirstPlayerItem(command.getSecondWord());
-                        player.PlayerInventory.Drop(toDrop);
-                        player.CurrentRoom.Items.Add(toDrop);
+                        player.PlayerInventory.Drop(player.CurrentRoom.RoomInventory, command.getSecondWord());
                         break;
                     case "inventory":
                         foreach (Item item in player.PlayerInventory.Items)
@@ -184,10 +168,16 @@ namespace ZuulCS
                         }
                         break;
                     case "use":
-                        Item itemToUse = player.PlayerInventory.GetFirstPlayerItem(command.getSecondWord());
-                        itemToUse.use(player);
-                       
-                        player.PlayerInventory.Drop(itemToUse);
+                        useItem(command);
+                        //Item itemToUse = player.PlayerInventory.GetFirstPlayerItem(command.getSecondWord());
+                        //itemToUse.use(player);
+
+
+                       // Item keyToUse = player.PlayerInventory.GetKey(command.getThirdWord());
+                       // keyToUse.use(player);
+
+
+                       // player.PlayerInventory.Drop(itemToUse);
                         break;
                 }
             }
@@ -239,7 +229,7 @@ namespace ZuulCS
             {
                 Console.WriteLine("There is no door to " + direction + "!");
             }
-            else if (nextRoom.Locked)
+            else if (nextRoom.locked)
             {
                 Console.WriteLine("this room is locked");
             }                
@@ -248,20 +238,54 @@ namespace ZuulCS
 
                 player.CurrentRoom = nextRoom;
                 player.damage(5);
-                player.CurrentRoom.showItems();
+                player.CurrentRoom.RoomInventory.GetItemsRoom();
 
                 Console.WriteLine(player.CurrentRoom.getLongDescription());
             }
             
         }
-           
+
         public void useItem(Command command)
         {
 
-            // bepaal item command.getsecondword()
-           
-            //bepaal target command.getthirdword()
-           
+            Item i = null;
+
+            if (command.hasSecondWord())
+            {
+                for (int y = player.PlayerInventory.Items.Count - 1; y >= 0; y--)
+                {
+                    if (command.getSecondWord() == player.PlayerInventory.Items[y].name)
+                    {
+                        i = player.PlayerInventory.Items[y];
+                    }
+                }
+            }
+            if (command.hasThirdWord())
+            {
+                Room unlockableRoom = player.CurrentRoom.getExit(command.getThirdWord());
+                if (unlockableRoom == null)
+                {
+                    Console.WriteLine("this room might be already unlocked or it doesn't exist. Feels bad man");
+                }
+                else
+                {
+                    if (i == null)
+                    {
+                        Console.WriteLine("I don't think you have that item");
+                        return;
+                    }
+                    else
+                    {
+                        i.use(unlockableRoom);
+                        return;
+                    }
+                }
+            }
+        
+            else
+            {
+                Console.WriteLine("I think you don't have that item. Can't help you sorry!");
+            }
         }
 
 

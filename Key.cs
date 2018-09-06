@@ -16,18 +16,17 @@ namespace ZuulCS
         }
         public override void use(object o)
         {
-            if (o.GetType() == typeof(Player))
+            if (o.GetType() == typeof(Room))
             {
 
-                Player r = (Player)o;
+                Room r = (Room)o;
 
 
-                r.Unlock();
-                Console.WriteLine("door unlocked");
+                r.unlock();
             }
             else
             {
-                Console.WriteLine("you can't use this");
+                Console.WriteLine("you can't use this item on this object");
             }
         }
     }
